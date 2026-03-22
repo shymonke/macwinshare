@@ -10,10 +10,10 @@ async-trait = { workspace = true }
 tracing = { workspace = true }
 thiserror = { workspace = true }
 anyhow = { workspace = true }
-core-graphics = { workspace = true }
-core-foundation = { workspace = true }
 
 [target.'cfg(target_os = "macos")'.dependencies]
+core-graphics = { workspace = true }
+core-foundation = { workspace = true }
 objc2 = "0.6"
 objc2-foundation = "0.3"
 objc2-app-kit = "0.3"

@@ -1,17 +1,19 @@
 //! Windows Display Information
-//! 
+//!
 //! Uses Win32 API to get information about connected monitors.
 
+#[cfg(target_os = "windows")]
+use std::sync::Mutex;
+#[cfg(target_os = "windows")]
+use tracing::debug;
+#[cfg(target_os = "windows")]
+use windows::core::BOOL;
+#[cfg(target_os = "windows")]
+use windows::Win32::Foundation::{LPARAM, RECT};
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Gdi::{
     EnumDisplayMonitors, GetMonitorInfoW, HDC, HMONITOR, MONITORINFOEXW,
 };
-#[cfg(target_os = "windows")]
-use windows::Win32::Foundation::{LPARAM, RECT};
-#[cfg(target_os = "windows")]
-use windows::core::BOOL;
-use std::sync::Mutex;
-use tracing::debug;
 
 /// Display information
 #[derive(Debug, Clone)]
@@ -77,16 +79,16 @@ impl WindowsDisplay {
     /// Get the display at a specific point
     pub fn get_display_at(&self, x: i32, y: i32) -> Result<Option<DisplayInfo>, String> {
         let displays = self.get_displays()?;
-        
-        Ok(displays.into_iter().find(|d| {
-            x >= d.x && x < d.x + d.width && y >= d.y && y < d.y + d.height
-        }))
+
+        Ok(displays
+            .into_iter()
+            .find(|d| x >= d.x && x < d.x + d.width && y >= d.y && y < d.y + d.height))
     }
 
     /// Get total virtual screen bounds (all displays combined)
     pub fn get_virtual_screen_bounds(&self) -> Result<(i32, i32, i32, i32), String> {
         let displays = self.get_displays()?;
-        
+
         if displays.is_empty() {
             return Err("No displays found".into());
         }
@@ -125,7 +127,7 @@ unsafe extern "system" fn monitor_enum_proc(
     let mut monitor_info = MONITORINFOEXW::default();
     monitor_info.monitorInfo.cbSize = std::mem::size_of::<MONITORINFOEXW>() as u32;
 
-    if GetMonitorInfoW(hmonitor, &mut monitor_info.monitorInfo as *mut _ as *mut _).as_bool() {
+    if GetMonitorInfoW(hmonitor, &mut monitor_info.monitorInfo).as_bool() {
         let rect = monitor_info.monitorInfo.rcMonitor;
         let is_primary = (monitor_info.monitorInfo.dwFlags & 1) != 0; // MONITORINFOF_PRIMARY = 1
 
