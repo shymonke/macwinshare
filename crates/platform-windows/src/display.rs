@@ -7,7 +7,9 @@ use windows::Win32::Graphics::Gdi::{
     EnumDisplayMonitors, GetMonitorInfoW, HDC, HMONITOR, MONITORINFOEXW,
 };
 #[cfg(target_os = "windows")]
-use windows::Win32::Foundation::{BOOL, LPARAM, RECT};
+use windows::Win32::Foundation::{LPARAM, RECT};
+#[cfg(target_os = "windows")]
+use windows::core::BOOL;
 use std::sync::Mutex;
 use tracing::debug;
 
@@ -46,7 +48,7 @@ impl WindowsDisplay {
 
         unsafe {
             EnumDisplayMonitors(
-                HDC::default(),
+                None,
                 None,
                 Some(monitor_enum_proc),
                 LPARAM(&mut *displays as *mut Vec<DisplayInfo> as isize),
@@ -123,7 +125,7 @@ unsafe extern "system" fn monitor_enum_proc(
     let mut monitor_info = MONITORINFOEXW::default();
     monitor_info.monitorInfo.cbSize = std::mem::size_of::<MONITORINFOEXW>() as u32;
 
-    if GetMonitorInfoW(hmonitor, &mut monitor_info.monitorInfo).is_ok() {
+    if GetMonitorInfoW(hmonitor, &mut monitor_info.monitorInfo as *mut _ as *mut _).as_bool() {
         let rect = monitor_info.monitorInfo.rcMonitor;
         let is_primary = (monitor_info.monitorInfo.dwFlags & 1) != 0; // MONITORINFOF_PRIMARY = 1
 
