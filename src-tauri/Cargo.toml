@@ -1,0 +1,32 @@
+[package]
+name = "macwinshare"
+version.workspace = true
+edition = "2021"
+license.workspace = true
+
+[lib]
+name = "macwinshare_lib"
+crate-type = ["lib", "cdylib", "staticlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
+
+[dependencies]
+macwinshare-core = { path = "../crates/core" }
+tauri = { version = "2.0", features = ["tray-icon"] }
+tauri-plugin-shell = "2.0"
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+macwinshare-platform-macos = { path = "../crates/platform-macos" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+macwinshare-platform-windows = { path = "../crates/platform-windows" }
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]

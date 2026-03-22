@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Allow accessibility access for input capture -->
+    <key>com.apple.security.accessibility</key>
+    <true/>
+    
+    <!-- Network access for device discovery and communication -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+    <key>com.apple.security.network.server</key>
+    <true/>
+    
+    <!-- Required for input monitoring -->
+    <key>com.apple.security.device.input-monitoring</key>
+    <true/>
+    
+    <!-- Clipboard access -->
+    <key>com.apple.security.personal-information.clipboard</key>
+    <true/>
+</dict>
+</plist>

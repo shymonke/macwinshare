@@ -1,0 +1,19 @@
+[package]
+name = "macwinshare-platform-macos"
+version.workspace = true
+edition = "2021"
+license.workspace = true
+
+[dependencies]
+tokio = { workspace = true }
+async-trait = { workspace = true }
+tracing = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+core-graphics = { workspace = true }
+core-foundation = { workspace = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-foundation = "0.3"
+objc2-app-kit = "0.3"

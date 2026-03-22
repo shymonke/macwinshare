@@ -1,0 +1,15 @@
+[package]
+name = "macwinshare-platform-windows"
+version.workspace = true
+edition = "2021"
+license.workspace = true
+
+[dependencies]
+tokio = { workspace = true }
+async-trait = { workspace = true }
+tracing = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { workspace = true }

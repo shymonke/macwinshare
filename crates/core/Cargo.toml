@@ -1,0 +1,38 @@
+[package]
+name = "macwinshare-core"
+version.workspace = true
+edition = "2021"
+license.workspace = true
+
+[dependencies]
+tokio = { workspace = true }
+async-trait = { workspace = true }
+rustls = { workspace = true }
+tokio-rustls = { workspace = true }
+rcgen = { workspace = true }
+mdns-sd = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+bincode = { workspace = true }
+tracing = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+hostname = { workspace = true }
+local-ip-address = { workspace = true }
+arboard = { workspace = true }
+sha2 = "0.10"
+rustls-pemfile = "2.1"
+
+[dev-dependencies]
+tempfile = { workspace = true }
+tokio-test = { workspace = true }
+tokio = { workspace = true, features = ["test-util", "macros"] }
+
+# Platform abstractions
+[target.'cfg(target_os = "macos")'.dependencies]
+macwinshare-platform-macos = { path = "../platform-macos" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+macwinshare-platform-windows = { path = "../platform-windows" }
