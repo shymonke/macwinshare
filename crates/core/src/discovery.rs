@@ -238,7 +238,7 @@ impl Discovery {
     }
 
     async fn start_udp_responder(&self) -> Result<()> {
-        let config = self.config.clone();
+        let machine_name = self.config.read().await.machine_name.clone();
 
         tokio::spawn(async move {
             let socket = match UdpSocket::bind(format!("0.0.0.0:{}", UDP_DISCOVERY_PORT)) {
@@ -260,10 +260,9 @@ impl Discovery {
                             let data = &buf[DISCOVERY_MAGIC.len()..len];
                             if data.starts_with(b"QUERY\0") {
                                 // Respond with our info
-                                let cfg = config.blocking_read();
                                 let mut response = DISCOVERY_MAGIC.to_vec();
                                 response.extend_from_slice(b"RESPONSE\0");
-                                response.extend_from_slice(cfg.machine_name.as_bytes());
+                                response.extend_from_slice(machine_name.as_bytes());
                                 
                                 let _ = socket.send_to(&response, addr);
                                 debug!("Responded to discovery query from {}", addr);

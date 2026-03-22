@@ -54,6 +54,14 @@ pub async fn save_config(
 /// Start the server
 #[tauri::command]
 pub async fn start_server(config: State<'_, ConfigState>) -> Result<(), String> {
+    #[cfg(target_os = "macos")]
+    {
+        if !macwinshare_platform_macos::check_accessibility() {
+            macwinshare_platform_macos::accessibility::request_accessibility();
+            return Err("Accessibility permission required. macOS Settings should open; enable MacWinShare under Privacy & Security > Accessibility, then try again.".to_string());
+        }
+    }
+
     let cfg = config.read().await.clone();
     
     // Start server in background
